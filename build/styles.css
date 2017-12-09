@@ -1,0 +1,61 @@
+.header__root__2P7EK {
+    display: flex;
+    background-color: #2d84cc;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    padding: 1em;
+}
+
+.header__logo__1BkL2 {
+  margin: 0;
+  color: #fff;
+  
+}
+.message__root__2dJDb {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.message__text__3-r9D {
+  font-size: 16pt;
+  font-weight: 200;
+}
+
+.message__user__2h4JL {
+  display: flex;
+  align-items: center;
+}
+
+.message__avatar__RE0dY {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.message__displayName__2wIFz {
+  font-weight: bold;
+  padding: 0.5em;
+}
+
+.message__username__3PkM3 {
+  color: #aaa;
+}
+
+.message__date__yVZjK {
+  color: #aaa;
+  padding: 0.5em;
+  font-size: 8pt;
+}
+
+.message__buttons__1WoFh {
+  display: flex;
+  justify-content: flex-start;
+  color: #aaa;
+}
+
+.message__icon__17hhE {
+  margin-right: 3em;
+}
