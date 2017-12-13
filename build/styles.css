@@ -1,3 +1,7 @@
+body{
+  margin: 0 auto;
+  background: #eee;
+}
 .header__root__2P7EK {
     display: flex;
     background-color: #2d84cc;
@@ -15,7 +19,8 @@
 .message__root__2dJDb {
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 1em;
+  border-radius: 5px;
+  margin: 0.5em;
   padding: 1em;
 }
 
@@ -58,4 +63,31 @@
 
 .message__icon__17hhE {
   margin-right: 3em;
+}
+.message-list__root__1H4fD {
+  margin: 0.5em;
+}
+.profile-bar__root__2eT0v{
+  display: flex;
+  margin: 1em;
+  align-items: center
+}
+
+.profile-bar__avatar__1eBKO{
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.profile-bar__username__3QMC0{
+  color: #666;
+}
+
+.profile-bar__button__3ntjd{
+  background-color: #2d84cc;
+  color: #fff;
+  border: 1px solid #1f6fb1;
+  border-radius: 5px;
+  margin: 0 1em;
+  padding: 0.5em 0.75em;
 }
