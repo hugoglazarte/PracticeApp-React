@@ -34343,7 +34343,8 @@ var App = function (_Component) {
       user: {
         photoURL: 'https://lh3.googleusercontent.com/-GQ4rWC32tIo/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof3L-nRM0FkfofJ4W_B0YCGfLqvBMg/s32-c-mo/photo.jpg',
         email: 'hugoglazarte@gmail.com',
-        onOpenText: false
+        displayName: 'Hugo G. Lazarte'
+        // onOpenText: false
       }
     };
     return _this;
@@ -34511,7 +34512,7 @@ var _InputText = __webpack_require__(167);
 
 var _InputText2 = _interopRequireDefault(_InputText);
 
-var _ProfileBar = __webpack_require__(168);
+var _ProfileBar = __webpack_require__(169);
 
 var _ProfileBar2 = _interopRequireDefault(_ProfileBar);
 
@@ -34547,25 +34548,61 @@ var Main = function (_Component) {
         picture: 'https://lh3.googleusercontent.com/-GQ4rWC32tIo/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof3L-nRM0FkfofJ4W_B0YCGfLqvBMg/s32-c-mo/photo.jpg',
         displayName: 'Hugo H. Lazarte',
         username: 'hugoglazarte',
-        date: Date.now()
+        date: Date.now(),
+        retweets: 0,
+        favorites: 0
       }, {
         id: _uuid2.default.v4(),
         text: 'Mensaje de prueba',
         picture: 'https://lh3.googleusercontent.com/-GQ4rWC32tIo/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof3L-nRM0FkfofJ4W_B0YCGfLqvBMg/s32-c-mo/photo.jpg',
         displayName: 'Hugo H. Lazarte',
         username: 'hugoglazarte',
-        date: Date.now() - 1800000
+        date: Date.now() - 1800000,
+        retweets: 0,
+        favorites: 0
       }]
-    };
+
+      // Otra forma de bindear mas elegante
+    };_this.handleSendText = _this.handleSendText.bind(_this);
     return _this;
   }
 
   _createClass(Main, [{
+    key: 'handleSendText',
+    value: function handleSendText(event) {
+      event.preventDefault();
+      var newMessage = {
+        id: _uuid2.default.v4(),
+        username: this.props.user.email.split('@')[0],
+        displayName: this.props.user.displayName,
+        picture: this.props.user.photoURL,
+        date: Date.now(),
+        // con event.target agarramos el form y con .text.value el contenido del campo name=text
+        text: event.target.text.value
+      };
+
+      this.setState({
+        // METODO ANTIGUO Q MODIFICA EL ORIGINAL:
+        // messages: messages.push(newMessage)
+
+        // Metodo Nuevo q crea un nuevo objeto sin mod el original:
+        messages: this.state.messages.concat([newMessage]),
+        openText: false
+      });
+      // console.log(newMessage)
+    }
+  }, {
+    key: 'handleCloseText',
+    value: function handleCloseText(event) {
+      event.preventDefault();
+      this.setState({ openText: false });
+    }
+  }, {
     key: 'handleOpenText',
     value: function handleOpenText(event) {
       // cuando una funcion recibe un evento, lo primero es anular el que estaba por defecto con preventDefault
       event.preventDefault();
-      this.setState({ onOpenText: true });
+      this.setState({ openText: true });
     }
 
     // render va a ejecutar la func renderOpenText y si OpenText es true va a mostrar el input
@@ -34574,7 +34611,11 @@ var Main = function (_Component) {
     key: 'renderOpenText',
     value: function renderOpenText() {
       if (this.state.openText) {
-        return _react2.default.createElement(_InputText2.default, null);
+        // abajo mostramos dos formas de hecer el bind, una no muestra el bind por que se declaro mas arriba
+        return _react2.default.createElement(_InputText2.default, {
+          onSendText: this.handleSendText,
+          onCloseText: this.handleCloseText.bind(this)
+        });
       }
     }
   }, {
@@ -34854,9 +34895,11 @@ var MessageList = function (_Component) {
             picture: msg.picture,
             displayName: msg.displayName,
             username: msg.username,
-            date: msg.date
+            date: msg.date,
+            numRetweets: msg.retweets,
+            numFavorites: msg.favorites
           });
-        })
+        }).reverse()
       );
     }
   }]);
@@ -34967,12 +35010,22 @@ var Message = function (_Component) {
           _react2.default.createElement(
             'div',
             { className: _message2.default.icon },
-            _react2.default.createElement('span', { className: 'fa fa-retweet' })
+            _react2.default.createElement('span', { className: 'fa fa-retweet' }),
+            _react2.default.createElement(
+              'span',
+              { className: 'styles.num' },
+              this.props.numRetweets
+            )
           ),
           _react2.default.createElement(
             'div',
             { className: _message2.default.icon },
-            _react2.default.createElement('span', { className: 'fa fa-star' })
+            _react2.default.createElement('span', { className: 'fa fa-star' }),
+            _react2.default.createElement(
+              'span',
+              { className: 'styles.num' },
+              this.props.numFavorites
+            )
           )
         )
       );
@@ -35301,6 +35354,10 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _inputText = __webpack_require__(168);
+
+var _inputText2 = _interopRequireDefault(_inputText);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35323,9 +35380,27 @@ var InputText = function (_Component) {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        'div',
-        null,
-        ' Hola mundo '
+        'form',
+        { className: _inputText2.default.form, onSubmit: this.props.onSendText },
+        _react2.default.createElement(
+          'textarea',
+          { className: _inputText2.default.text, name: 'text' },
+          ' '
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: _inputText2.default.buttons },
+          _react2.default.createElement(
+            'button',
+            { className: _inputText2.default.close, onClick: this.props.onCloseText },
+            'Cerrar'
+          ),
+          _react2.default.createElement(
+            'button',
+            { className: _inputText2.default.send, type: 'submit' },
+            ' Enviar '
+          )
+        )
       );
     }
   }]);
@@ -35337,6 +35412,13 @@ exports.default = InputText;
 
 /***/ }),
 /* 168 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+module.exports = {"text":"input-text__text__3RYWl","buttons":"input-text__buttons__1jrzd","close":"input-text__close__2LrC3","send":"input-text__send__1JOoK"};
+
+/***/ }),
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35352,7 +35434,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _profileBar = __webpack_require__(169);
+var _profileBar = __webpack_require__(170);
 
 var _profileBar2 = _interopRequireDefault(_profileBar);
 
@@ -35410,7 +35492,7 @@ var ProfileBar = function (_Component) {
 exports.default = ProfileBar;
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

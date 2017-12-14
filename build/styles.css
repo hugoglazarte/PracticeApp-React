@@ -67,6 +67,35 @@ body{
 .message-list__root__1H4fD {
   margin: 0.5em;
 }
+.input-text__text__3RYWl{
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 90%;
+  height: 5em;
+  padding: 0.75em;
+  margin: 1em 0.5em;
+}
+
+.input-text__buttons__1jrzd {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.input-text__buttons__1jrzd > button {
+  border-radius: 5px;
+  padding: 0.5em 0.75em;
+}
+
+.input-text__close__2LrC3{
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.input-text__send__1JOoK{
+  background-color: #2d84cc;
+  border: 1px solid #ddd;
+  color: #fff;
+}
 .profile-bar__root__2eT0v{
   display: flex;
   margin: 1em;

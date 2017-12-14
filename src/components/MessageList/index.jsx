@@ -11,6 +11,10 @@ class MessageList extends Component {
   // Las props llegan desde el comp padre, en este caso Main
   constructor(props){
     super(props)
+
+    // le indicamos el alcance a las funciones q s renderisan abajo y se llaman como event
+    this.onRetweet = this.onRetweet.bind(this)
+    this.onFavorite = this.onFavorite.bind(this)
   }
 
 
@@ -18,6 +22,11 @@ class MessageList extends Component {
 // return (
 //   <span>{ msg.text }</span>
 // )
+//
+// ** onRetweet={ () => this.onRetweet(msg.id) } **
+// con una arrow function anonima podemos lanzar la funcion
+//   onRetweet pasandole el id, sino no vamos a poder
+//      sin la arrow solo llamamos a la funcion pero no la ejecutamos
   render(){
     return(
       <div className={ styles.root }>
@@ -30,6 +39,10 @@ class MessageList extends Component {
               displayName={ msg.displayName }
               username={ msg.username }
               date={ msg.date }
+              numRetweets={ msg.retweets }
+              numFavorites={ msg.favorites }
+              onRetweet={ () => this.props.onRetweet(msg.id) }
+              onFavorite={ () => this.props.onFavorite(msg.id) }
             />
           )
         } ).reverse() }

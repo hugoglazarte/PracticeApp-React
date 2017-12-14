@@ -21,7 +21,9 @@ class Main extends Component {
         picture: 'https://lh3.googleusercontent.com/-GQ4rWC32tIo/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof3L-nRM0FkfofJ4W_B0YCGfLqvBMg/s32-c-mo/photo.jpg',
         displayName: 'Hugo H. Lazarte',
         username: 'hugoglazarte',
-        date: Date.now()
+        date: Date.now(),
+        retweets: 0,
+        favorites: 0
       },
       {
         id: uuid.v4(),
@@ -29,7 +31,9 @@ class Main extends Component {
         picture: 'https://lh3.googleusercontent.com/-GQ4rWC32tIo/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof3L-nRM0FkfofJ4W_B0YCGfLqvBMg/s32-c-mo/photo.jpg',
         displayName: 'Hugo H. Lazarte',
         username: 'hugoglazarte',
-        date: Date.now() - 1800000
+        date: Date.now() - 1800000,
+        retweets: 0,
+        favorites: 0
       }]
     }
 
@@ -71,6 +75,17 @@ class Main extends Component {
     this.setState({ openText: true })
   }
 
+  // estas funciones llegan desde message a traves de messagelist y creamos un handle ya que
+  //    el atributo que queremos modificar se encuentra en este componente.
+  handleRetweet() {
+
+  }
+
+  handleFavorite() {
+
+  }
+
+
   // render va a ejecutar la func renderOpenText y si OpenText es true va a mostrar el input
   renderOpenText(){
     if(this.state.openText) {
@@ -99,7 +114,11 @@ class Main extends Component {
           onOpenText={this.handleOpenText.bind(this)}
         />
         {this.renderOpenText()}
-        <MessageList messages={ this.state.messages } />
+        <MessageList
+          messages={ this.state.messages }
+          onRetweet={this.handleRetweet}
+          onFavorite={this.handleFavorite}
+        />
       </div>
     )
   }
