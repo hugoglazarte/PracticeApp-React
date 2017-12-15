@@ -13,8 +13,7 @@ class MessageList extends Component {
     super(props)
 
     // le indicamos el alcance a las funciones q s renderisan abajo y se llaman como event
-    this.onRetweet = this.onRetweet.bind(this)
-    this.onFavorite = this.onFavorite.bind(this)
+
   }
 
 
@@ -43,6 +42,7 @@ class MessageList extends Component {
               numFavorites={ msg.favorites }
               onRetweet={ () => this.props.onRetweet(msg.id) }
               onFavorite={ () => this.props.onFavorite(msg.id) }
+              onReplyTweet={ () => this.props.onReplyTweet(msg.id, msg.username) }
             />
           )
         } ).reverse() }

@@ -34605,6 +34605,16 @@ var Main = function (_Component) {
       this.setState({ openText: true });
     }
 
+    // estas funciones llegan desde message a traves de messagelist y creamos un handle ya que
+    //    el atributo que queremos modificar se encuentra en este componente.
+
+  }, {
+    key: 'handleRetweet',
+    value: function handleRetweet() {}
+  }, {
+    key: 'handleFavorite',
+    value: function handleFavorite() {}
+
     // render va a ejecutar la func renderOpenText y si OpenText es true va a mostrar el input
 
   }, {
@@ -34636,7 +34646,11 @@ var Main = function (_Component) {
           onOpenText: this.handleOpenText.bind(this)
         }),
         this.renderOpenText(),
-        _react2.default.createElement(_MessageList2.default, { messages: this.state.messages })
+        _react2.default.createElement(_MessageList2.default, {
+          messages: this.state.messages,
+          onRetweet: this.handleRetweet,
+          onFavorite: this.handleFavorite
+        })
       );
     }
   }]);
@@ -34873,18 +34887,30 @@ var MessageList = function (_Component) {
   function MessageList(props) {
     _classCallCheck(this, MessageList);
 
-    return _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).call(this, props));
+    // le indicamos el alcance a las funciones q s renderisan abajo y se llaman como event
+    var _this = _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).call(this, props));
+
+    _this.onRetweet = _this.onRetweet.bind(_this);
+    _this.onFavorite = _this.onFavorite.bind(_this);
+    return _this;
   }
 
   // para recorrer los valores del array message vamos a usar map en lugar de un ciclo for
   // return (
   //   <span>{ msg.text }</span>
   // )
+  //
+  // ** onRetweet={ () => this.onRetweet(msg.id) } **
+  // con una arrow function anonima podemos lanzar la funcion
+  //   onRetweet pasandole el id, sino no vamos a poder
+  //      sin la arrow solo llamamos a la funcion pero no la ejecutamos
 
 
   _createClass(MessageList, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         { className: _messageList2.default.root },
@@ -34897,7 +34923,13 @@ var MessageList = function (_Component) {
             username: msg.username,
             date: msg.date,
             numRetweets: msg.retweets,
-            numFavorites: msg.favorites
+            numFavorites: msg.favorites,
+            onRetweet: function onRetweet() {
+              return _this2.props.onRetweet(msg.id);
+            },
+            onFavorite: function onFavorite() {
+              return _this2.props.onFavorite(msg.id);
+            }
           });
         }).reverse()
       );
@@ -34952,16 +34984,48 @@ var Message = function (_Component) {
   function Message(props) {
     _classCallCheck(this, Message);
 
-    return _possibleConstructorReturn(this, (Message.__proto__ || Object.getPrototypeOf(Message)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Message.__proto__ || Object.getPrototypeOf(Message)).call(this, props));
+
+    _this.state = {
+      pressFavorite: false,
+      pressRetweet: false
+    };
+
+    _this.onPressRetweet = _this.onPressRetweet.bind(_this);
+    _this.onPressFavorite = _this.onPressFavorite.bind(_this);
+    return _this;
   }
 
+  /** como queremos ejecutar onRetweet que se encuentra en el padre y queremos
+      modificar un estado de este componente, creamos una nueva funcion que haga
+      las dos cosas
+  **/
+
   _createClass(Message, [{
+    key: 'onPressRetweet',
+    value: function onPressRetweet() {
+      this.props.onRetweet();
+      this.setState({
+        pressRetweet: true
+      });
+    }
+  }, {
+    key: 'onPressFavorite',
+    value: function onPressFavorite() {
+      this.props.onFavorite();
+      this.setState({
+        pressFavorite: true
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
 
       // creamos la funcion con la libreria momment que nos devuelte "fue creado hace 10min"
       var dateFormat = (0, _moment2.default)(this.props.date).fromNow();
 
+      // className={ (this.state.pressRetweet) ? styles.rtGreen : '' }
+      //    si el estado de pressRetweet es true le aplico el estilo rtGreen y sino no hago nada
       return _react2.default.createElement(
         'div',
         { className: _message2.default.root },
@@ -35009,21 +35073,27 @@ var Message = function (_Component) {
           ),
           _react2.default.createElement(
             'div',
-            { className: _message2.default.icon },
+            {
+              className: this.state.pressRetweet ? _message2.default.rtGreen : '',
+              onClick: this.onPressRetweet
+            },
             _react2.default.createElement('span', { className: 'fa fa-retweet' }),
             _react2.default.createElement(
               'span',
-              { className: 'styles.num' },
+              { className: _message2.default.num },
               this.props.numRetweets
             )
           ),
           _react2.default.createElement(
             'div',
-            { className: _message2.default.icon },
+            {
+              className: this.state.pressFavorite ? _message2.default.favYellow : '',
+              onClick: this.onPressFavorite
+            },
             _react2.default.createElement('span', { className: 'fa fa-star' }),
             _react2.default.createElement(
               'span',
-              { className: 'styles.num' },
+              { className: _message2.default.num },
               this.props.numFavorites
             )
           )
@@ -35328,7 +35398,7 @@ webpackContext.id = 164;
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-module.exports = {"root":"message__root__2dJDb","text":"message__text__3-r9D","user":"message__user__2h4JL","avatar":"message__avatar__RE0dY","displayName":"message__displayName__2wIFz","username":"message__username__3PkM3","date":"message__date__yVZjK","buttons":"message__buttons__1WoFh","icon":"message__icon__17hhE"};
+module.exports = {"root":"message__root__2dJDb","text":"message__text__3-r9D","user":"message__user__2h4JL","avatar":"message__avatar__RE0dY","displayName":"message__displayName__2wIFz","username":"message__username__3PkM3","date":"message__date__yVZjK","buttons":"message__buttons__1WoFh","icon":"message__icon__17hhE","num":"message__num__1c37G","rtGreen":"message__rtGreen__4o1Ak","favYellow":"message__favYellow__2Q5C5"};
 
 /***/ }),
 /* 166 */

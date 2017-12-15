@@ -11,10 +11,12 @@ import InputText from '../InputText';
 import ProfileBar from '../ProfileBar';
 
 class Main extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {
+      user: Object.assign({}, this.props.user, {retweets: []}, {favorites: []}),
       onOpenText: false,
+      usernameToReply: '',
       messages: [{
         id: uuid.v4(),
         text: 'Mensaje de prueba',
@@ -39,6 +41,10 @@ class Main extends Component {
 
     // Otra forma de bindear mas elegante
      this.handleSendText = this.handleSendText.bind(this)
+
+     this.handleRetweet = this.handleRetweet.bind(this)
+     this.handleFavorite = this.handleFavorite.bind(this)
+     this.handleReplyTweet = this.handleReplyTweet.bind(this)
   }
 
   handleSendText(event){
@@ -77,11 +83,56 @@ class Main extends Component {
 
   // estas funciones llegan desde message a traves de messagelist y creamos un handle ya que
   //    el atributo que queremos modificar se encuentra en este componente.
-  handleRetweet() {
+  handleRetweet(msgId) {
+    let alreadyRetweeted = this.state.user.retweets.filter(rt => rt === msgId)
+
+    if(alreadyRetweeted.length === 0) {
+      let messages = this.state.messages.map(msg => {
+        if(msg.id === msgId) {
+          msg.retweets++
+        }
+        return msg
+      })
+
+      let user = Object.assign({}, this.state.user)
+      user.retweets.push(msgId)
+
+      this.setState({
+        messages,
+        user
+      })
+    }
 
   }
 
-  handleFavorite() {
+  handleFavorite(msgId) {
+    // primero vemos si ya le dimos fav
+    let alreadyFavorited = this.state.user.favorites.filter(fav => fav === msgId)
+
+    if(alreadyFavorited.length === 0){
+      let messages = this.state.messages.map(msg => {
+        if(msg.id === msgId) {
+          msg.favorites++
+        }
+        return msg
+      })
+
+      let user = Object.assign({}, this.state.user)
+      user.favorites.push(msgId)
+
+      this.setState({
+        messages: messages,
+        user: user
+      })
+    }
+  }
+
+
+  handleReplyTweet(msgId, usernameToReply) {
+    this.setState({
+      openText: true,
+      usernameToReply: usernameToReply
+    })
 
   }
 
@@ -94,6 +145,7 @@ class Main extends Component {
         <InputText
           onSendText={this.handleSendText}
           onCloseText={this.handleCloseText.bind(this)}
+          usernameToReply={this.state.usernameToReply}
         />
       )
     }
@@ -116,8 +168,9 @@ class Main extends Component {
         {this.renderOpenText()}
         <MessageList
           messages={ this.state.messages }
-          onRetweet={this.handleRetweet}
-          onFavorite={this.handleFavorite}
+          onRetweet={ this.handleRetweet }
+          onFavorite={ this.handleFavorite }
+          onReplyTweet={ this.handleReplyTweet }
         />
       </div>
     )
